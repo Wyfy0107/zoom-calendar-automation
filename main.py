@@ -14,12 +14,21 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-CALENDAR_ID = 'c_oek5apckj3l4c7t3qdsf95auls@group.calendar.google.com'
+CALENDAR_ID = None
 DEST = '/Volumes/GoogleDrive/Shared drives/fin_fs9_2022-01/Recordings'
 ZOOM = '/Users/duynguyen/Documents/Zoom'
+
+if os.environ.get('CALENDAR_ID'):
+    CALENDAR_ID = os.environ.get('CALENDAR_ID')
+else:
+    print('Please input your calendar id')
+    sys.exit(1)
 
 
 def getDate(str):
@@ -88,10 +97,16 @@ def main():
 
             video = glob.glob('%s/*.mp4' % dir)
             abs_path = os.path.join(dir)
-            new_name = '%s/%s.mp4' % (abs_path, event_names[index])
-            os.rename(video[0], new_name)
-            shutil.copy(
-                new_name, '/Volumes/GoogleDrive/Shared drives/fin_fs9_2022-01/Recordings')
+            new_video_name = '%s.mp4' % (event_names[index])
+            new_full_name = '%s/%s' % (abs_path, new_video_name)
+            os.rename(video[0], new_full_name)
+
+            final_name = '%s/%s' % (DEST, new_video_name)
+            if os.path.exists(final_name):
+                print('Video already uploaded')
+                continue
+            else:
+                shutil.copy(new_name, DEST)
 
     except HttpError as err:
         print(err)

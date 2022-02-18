@@ -6,6 +6,7 @@ import datetime
 import shutil
 import glob
 import time
+import sys
 from pprint import pprint
 
 from google.auth.transport.requests import Request
@@ -64,12 +65,27 @@ def main():
         events = calendar.get('items')
         event_names = [item.get('summary') for item in events]
 
+        if not event_names:
+            print('No events today, exiting')
+            sys.exit()
+
         # get zoom videos
         zoom_dirs_today = glob.glob(
             '%s/%s*' % (ZOOM, now.date()))
         zoom_dirs_today.sort(key=getDate)
 
+        if not zoom_dirs_today:
+            print('No zoom videos')
+            sys.exit()
+
         for index, dir in enumerate(zoom_dirs_today):
+            try:
+                current_event = event_names[index]
+            except IndexError:
+                print('Current video does not have corresponding event name')
+                break
+                sys.exit()
+
             video = glob.glob('%s/*.mp4' % dir)
             abs_path = os.path.join(dir)
             new_name = '%s/%s.mp4' % (abs_path, event_names[index])

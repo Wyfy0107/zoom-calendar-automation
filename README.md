@@ -3,6 +3,8 @@
 Problem: after each lecture, I have to manually rename and upload recorded video to google drive.
 With this python script, it will fetch the lecture names from your google calendar and make it the name of the recorded video, then upload it to gg drive
 
+:question: Why not just name the video as the current date time: I used to do this and students complained that the file name is too cryptic and they are lazy to check the calendar :sweat_smile:
+
 ## Prerequisites
 
 You will need to download `drive` for desktop: <https://www.google.com/drive/download/>

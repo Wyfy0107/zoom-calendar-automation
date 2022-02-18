@@ -12,6 +12,8 @@ After downloading drive for desktop, it will mount a directory to your file syst
 
 Create a new project in google developer console. Create and configure a new oauth client ID credential for **desktop application**. Once done, download the credential json file into this project location and rename it to `credentials.json`
 
+After that, enable google calendar API for the newly created project in your google developer console as well.
+
 ## Instructions
 
 1. Get the calendar ID that you want to fetch the events from. You can see it from within google calendar. You should get the ID of your class calendar

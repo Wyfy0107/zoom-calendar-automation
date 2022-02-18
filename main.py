@@ -90,7 +90,8 @@ def main():
             abs_path = os.path.join(dir)
             new_name = '%s/%s.mp4' % (abs_path, event_names[index])
             os.rename(video[0], new_name)
-            shutil.copyfile(new_name, DEST)
+            shutil.copy(
+                new_name, '/Volumes/GoogleDrive/Shared drives/fin_fs9_2022-01/Recordings')
 
     except HttpError as err:
         print(err)

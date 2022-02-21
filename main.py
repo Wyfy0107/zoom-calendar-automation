@@ -7,6 +7,7 @@ import shutil
 import glob
 import time
 import sys
+import logging
 from pprint import pprint
 
 from google.auth.transport.requests import Request
@@ -15,6 +16,11 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from dotenv import load_dotenv
+
+logging.basicConfig(filename='execution.log',
+                    encoding='utf-8',
+                    format='%(asctime)s %(message)s'
+                    )
 
 load_dotenv()
 
@@ -27,7 +33,7 @@ ZOOM = '/Users/duynguyen/Documents/Zoom'
 if os.environ.get('CALENDAR_ID'):
     CALENDAR_ID = os.environ.get('CALENDAR_ID')
 else:
-    print('Please input your calendar id')
+    logging.error(msg)('Please input your calendar id')
     sys.exit(1)
 
 
@@ -75,7 +81,7 @@ def main():
         event_names = [item.get('summary') for item in events]
 
         if not event_names:
-            print('No events today, exiting')
+            logging.info('No events today, exiting')
             sys.exit()
 
         # get zoom videos
@@ -84,14 +90,15 @@ def main():
         zoom_dirs_today.sort(key=getDate)
 
         if not zoom_dirs_today:
-            print('No zoom videos')
+            logging.info('No zoom videos')
             sys.exit()
 
         for index, dir in enumerate(zoom_dirs_today):
             try:
                 current_event = event_names[index]
             except IndexError:
-                print('Current video does not have corresponding event name')
+                logging.warning(
+                    'Current video does not have corresponding event name')
                 break
                 sys.exit()
 
@@ -103,13 +110,13 @@ def main():
 
             final_name = '%s/%s' % (DEST, new_video_name)
             if os.path.exists(final_name):
-                print('Video already uploaded')
+                logging.warning('Video already uploaded')
                 continue
             else:
                 shutil.copy(new_full_name, DEST)
 
     except HttpError as err:
-        print(err)
+        logging.error(err)
 
 
 if __name__ == '__main__':

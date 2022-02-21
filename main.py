@@ -106,7 +106,7 @@ def main():
                 print('Video already uploaded')
                 continue
             else:
-                shutil.copy(new_name, DEST)
+                shutil.copy(new_full_name, DEST)
 
     except HttpError as err:
         print(err)
